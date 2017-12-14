@@ -19,7 +19,7 @@
             <ul type="square">
                 <li><a href="<c:url value="viewSummary.do"/>">Account Summary </a></li>&nbsp;
                 <li><a href="<c:url value="viewBalance.do"/>">View Balance </a></li>&nbsp;
-                <li><a href="<c:url value="viewStatement.do"/>">View Statement</a></li>&nbsp;
+                <li><a href="<c:url value="viewTransac.do"/>">View Statement</a></li>&nbsp;
                 <li><a href="<c:url value="makeTransfer.do"/>">Make Transfer</a></li>&nbsp;
                 <li><a href="<c:url value="payBills.do"/>">Pay Utility Bills</a></li>&nbsp;
                 <li><a href="<c:url value="administerAcc.do"/>">Administer Account</a></li>&nbsp;

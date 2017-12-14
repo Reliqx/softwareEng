@@ -39,26 +39,29 @@ public class BankServlet extends HttpServlet {
         switch (action) {
             case "/login.do": {
                 showNext = CustomerController.login(request);
+                CustomerController.loadAccount(request);
                 break;
 
             }
-        
-        case "/viewSummary.do":{
-               showNext = CustomerController.viewSummary(request);
-              break;
+
+            case "/viewSummary.do": {
+                showNext = CustomerController.viewSummary(request);
+                break;
             }
-        
-        case "/viewBalance.do":{
-                           
+
+            case "/viewBalance.do": {
+
                 showNext = CustomerController.viewBalance(request);
                 break;
             }
+            case "/viewTransac.do": {
+                showNext = CustomerController.viewTransactions(request);
+                break;
+            }
         }
-        
 
         //String greeting = getInitParameter("greeting");
         //request.setAttribute("greeting", greeting);
-
         if (showNext.startsWith("redirect:")) {
             response.sendRedirect(response.encodeRedirectURL(showNext.substring(9)));
         } else {
