@@ -46,6 +46,9 @@ public class CustomerController {
                 session.setAttribute("customer", customer);
                 view = "CustomerView";
             }
+            rs.close();
+            con.close();
+            ps.close();
         } catch (Exception e) {
 
         }
@@ -75,8 +78,9 @@ public class CustomerController {
                     account.setCheq_id(rs.getInt("cheq_id"));
                     account.setSaving_id(rs.getInt("saving_id"));
                     session.setAttribute("account", account);
-                    
+
                 }
+
                 view = "viewSummary";
             }
         } catch (Exception e) {
@@ -88,50 +92,47 @@ public class CustomerController {
 
     public static String viewBalance(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         String view = "redirect:";
+        HttpSession session = request.getSession();
 
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sheridanbank?", "root", "root");
-            PreparedStatement ps = con.prepareStatement("select * chequing_acc_table where user_id=?");
-            //PreparedStatement ps2 = con.prepareStatement("select * savings_acc_table where user_id=?");
-            
-             HttpSession session = request.getSession();
+            PreparedStatement ps = con.prepareStatement("select * from chequing_acc_table where user_id=?");
+            PreparedStatement ps2 = con.prepareStatement("select * from savings_acc_table where user_id=?");
             if (session == null || session.getAttribute("customer") == null) {
                 return "expired"; // show "your session has expired" with "expired.jsp"
             } else {
                 Customer customer = (Customer) session.getAttribute("customer");
+                Account account = (Account) session.getAttribute("account");
                 int userID = customer.getUser_id();
                 ps.setInt(1, userID);
-                //ps2.setInt(1, userID);
+                ps2.setInt(1, userID);
                 ResultSet rs = ps.executeQuery();
-                //ResultSet rs2 = ps2.executeQuery();
-                
-                while(rs.next()){
-                    Chequing chequing =  new Chequing();
+                ResultSet rs2 = ps2.executeQuery();
+                while (rs.next()) {
+                    Chequing chequing = new Chequing();
                     chequing.setAccount_id(rs.getInt("account_id"));
                     chequing.setUser_id(rs.getInt("user_id"));
                     chequing.setCheq_id(rs.getInt("cheq_id"));
-                    chequing.setSaving_id(rs.getInt("saving_id"));
-                    chequing.setBalance(rs.getDouble("balance"));
+                    chequing.setBalance(rs.getInt("balance"));
                     session.setAttribute("chequing_acc", chequing);
-                    
-                }
-//                 while(rs2.next()){
-//                    Savings saving =  new Savings();
-//                    saving.setAccount_id(rs2.getInt("account_id"));
-//                    saving.setUser_id(rs2.getInt("user_id"));
-//                    saving.setCheq_id(rs2.getInt("cheq_id"));
-//                    saving.setSaving_id(rs2.getInt("saving_id"));
-//                    saving.setBalance(rs2.getDouble("balance"));
-//                    session.setAttribute("saving_acc", saving);
-//                }
-                 view = "viewBalance";
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-    }
-        
-        return view;
-}
-    }
 
+                }
+                while (rs2.next()) {
+                    Savings savings = new Savings();
+                    savings.setAccount_id(rs2.getInt("account_id"));
+                    savings.setUser_id(rs2.getInt("user_id"));
+                    savings.setSaving_id(rs2.getInt("saving_id"));
+                    savings.setBalance(rs2.getInt("balance"));
+                    session.setAttribute("savings_acc", savings);
+
+                }
+                view = "viewBalance";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return view;
+    }
+}

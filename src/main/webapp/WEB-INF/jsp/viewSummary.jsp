@@ -14,7 +14,7 @@
     </head>
     <body>
         <h1>Account Summary for <c:out value="${customer.username}"/> </h1>
-        
+        <h2><c:out value="${customer.user_id}"/> </h2>
         <table border="2" width="3" cellpadding="2">
             <caption>Account ID: <c:out value="${account.account_id}"/></caption>
             <thead>

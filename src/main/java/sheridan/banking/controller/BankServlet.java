@@ -49,6 +49,7 @@ public class BankServlet extends HttpServlet {
             }
         
         case "/viewBalance.do":{
+                           
                 showNext = CustomerController.viewBalance(request);
                 break;
             }
