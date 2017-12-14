@@ -11,14 +11,14 @@ package sheridan.banking.business;
  */
 public class Chequing extends Account {
 
-    private int balance;
+    private double balance;
 
 
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 }
