@@ -229,43 +229,51 @@ public class CustomerController {
             Transfer transfer = (Transfer) session.getAttribute("transfer");
             PreparedStatement ps = con.prepareStatement("select * from chequing_acc_table where account_id=?");
             PreparedStatement ps2 = con.prepareStatement("select * from savings_acc_table where account_id=?");
+            //gets the information of the account we're transferring
             ps.setInt(1, transfer.getAccountNoTransfer());
             ps2.setInt(1, transfer.getAccountNoTransfer());
             //need to create error handling if target account does not exists in the table
             //need to create error handling if current account does not have enough amount
-            if (transfer.getAccountTarget().equals("Chequing")) {
+            
+            //if the target is chequing 
+            if (transfer.getAccountTarget().contains("Chequing")) {
                 ResultSet rs = ps.executeQuery();
                 Chequing transferAccount = new Chequing();
+                //System.out.println("test");
                 while (rs.next()) {
                     transferAccount.setAccount_id(rs.getInt("account_id"));
                     transferAccount.setUser_id(rs.getInt("user_id"));
                     transferAccount.setCheq_id(rs.getInt("cheq_id"));
                     transferAccount.setBalance(rs.getInt("balance"));
-
+                    
+                    request.setAttribute("transferAccount", transferAccount);
+                    //view = "transferComplete";
                 }
+            
                 //add the transfer amount to the transfer account
-                transferAccount.transferAmount(transfer.getAmountTransferred());
-                //update db
+                
+               transferAccount.transferAmount(transfer.getAmountTransferred());
+//                //update db
                 PreparedStatement ps3 = con.prepareStatement("UPDATE chequing_acc_table SET balance=? where account_id=?");
-                ps3.setDouble(1, transferAccount.getBalance());
+                ps3.setDouble(1,transferAccount.getBalance());
                 ps3.setInt(2, transferAccount.getAccount_id());
-
-                ResultSet rs3 = ps3.executeQuery();
+                ps3.executeQuery();
+//                
                 view = "transferComplete";
                 
-            } else if (transfer.getAccountType().equals("Savings")) {
-                ResultSet rs2 = ps2.executeQuery();
-                while (rs2.next()) {
-                    Savings transferAccount = new Savings();
-                    transferAccount.setAccount_id(rs2.getInt("account_id"));
-                    transferAccount.setUser_id(rs2.getInt("user_id"));
-                    transferAccount.setCheq_id(rs2.getInt("cheq_id"));
-                    transferAccount.setBalance(rs2.getInt("balance"));
-                    session.setAttribute("transfer_acc", transferAccount);
-                }
-                view = "transferComplete";
-            }
-
+            } 
+ //           else if (transfer.getAccountType().equals("Savings")) {
+//                ResultSet rs2 = ps2.executeQuery();
+//                while (rs2.next()) {
+//                    Savings transferAccount = new Savings();
+//                    transferAccount.setAccount_id(rs2.getInt("account_id"));
+//                    transferAccount.setUser_id(rs2.getInt("user_id"));
+//                    transferAccount.setCheq_id(rs2.getInt("cheq_id"));
+//                    transferAccount.setBalance(rs2.getInt("balance"));
+//                    session.setAttribute("transfer_acc", transferAccount);
+//                }
+//                view = "transferComplete";
+//            }
         } catch (Exception e) {
             e.printStackTrace();
             {

@@ -14,6 +14,12 @@
     </head>
     <body>
         <h1>Transfer Completed</h1>
+        <h2> Testing View </h2>
+        <p><c:out value="${transferAccount.account_id}"/></p>
+        <p>
+            <c:out value="${transferAccount.balance}"/>
+            
+        </p>
         <p><a href="<c:url value="viewTransfer.do"/>">Make another Transfer?</a></p>
         <p><a href="<c:url value="CustomerView.jsp"/>">Main Menu</a></p>
 </body>
