@@ -279,7 +279,7 @@ public class CustomerController {
 //               request.setAttribute("transferAccount", transferAccount);
 //               view="transferComplete";
 //                //update db
-                PreparedStatement ps3 = con.prepareStatement("UPDATE chequing_acc_table SET balance=? where account_id=?");
+                PreparedStatement ps3 = con.prepareStatement("UPDATE savings_acc_table SET balance=? where account_id=?");
                 ps3.setDouble(1, transferAccount.getBalance());
                 ps3.setInt(2, transferAccount.getAccount_id());
                 ps3.executeUpdate();
