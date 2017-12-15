@@ -17,6 +17,35 @@ public class Transfer {
 
     public String getAccountTarget() {
         return accountTarget;
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
     }
 
     public void setAccountTarget(String accountTarget) {

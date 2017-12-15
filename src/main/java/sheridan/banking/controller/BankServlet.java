@@ -43,7 +43,18 @@ public class BankServlet extends HttpServlet {
                 break;
 
             }
-
+            case "/createAccount.do": {
+                showNext = CustomerController.createAccount(request);
+                break;
+            }
+            case "/viewAccounts.do": {
+                showNext = CustomerController.viewAccounts(request);
+                break;
+            }
+            case "/deleteAccount.do": {
+                showNext = CustomerController.remove(request);
+                break;
+            }
             case "/viewSummary.do": {
                 showNext = CustomerController.viewSummary(request);
                 break;
