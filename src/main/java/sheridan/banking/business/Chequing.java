@@ -24,4 +24,7 @@ public class Chequing extends Account {
     public void transferAmount(double amount){
         balance = this.balance + amount;
     }
+    public void withdrawAmount(double amount){
+        balance = this.balance - amount;
+    }
 }

@@ -19,4 +19,10 @@ public class Savings extends Account {
     public void setBalance(double balance) {
         this.balance = balance;
     }
+    public void transferAmount(double amount){
+        balance = this.balance + amount;
+    }
+    public void withdrawAmount(double amount){
+        balance = this.balance - amount;
+    }    
 }

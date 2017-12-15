@@ -234,7 +234,7 @@ public class CustomerController {
             ps2.setInt(1, transfer.getAccountNoTransfer());
             //need to create error handling if target account does not exists in the table
             //need to create error handling if current account does not have enough amount
-            
+
             //if the target is chequing 
             if (transfer.getAccountTarget().contains("Chequing")) {
                 ResultSet rs = ps.executeQuery();
@@ -245,41 +245,52 @@ public class CustomerController {
                     transferAccount.setUser_id(rs.getInt("user_id"));
                     transferAccount.setCheq_id(rs.getInt("cheq_id"));
                     transferAccount.setBalance(rs.getInt("balance"));
-                    
+
                     request.setAttribute("transferAccount", transferAccount);
                     //view = "transferComplete";
                 }
-            
+
                 //add the transfer amount to the transfer account
-                
-               transferAccount.transferAmount(transfer.getAmountTransferred());
+                transferAccount.transferAmount(transfer.getAmountTransferred());
+                transferAccount.withdrawAmount(transfer.getAmountTransferred());
+//               request.setAttribute("transferAccount", transferAccount);
+//               view="transferComplete";
 //                //update db
                 PreparedStatement ps3 = con.prepareStatement("UPDATE chequing_acc_table SET balance=? where account_id=?");
-                ps3.setDouble(1,transferAccount.getBalance());
+                ps3.setDouble(1, transferAccount.getBalance());
                 ps3.setInt(2, transferAccount.getAccount_id());
-                ps3.executeQuery();
+                ps3.executeUpdate();
 //                
                 view = "transferComplete";
-                
-            } 
- //           else if (transfer.getAccountType().equals("Savings")) {
-//                ResultSet rs2 = ps2.executeQuery();
-//                while (rs2.next()) {
-//                    Savings transferAccount = new Savings();
-//                    transferAccount.setAccount_id(rs2.getInt("account_id"));
-//                    transferAccount.setUser_id(rs2.getInt("user_id"));
-//                    transferAccount.setCheq_id(rs2.getInt("cheq_id"));
-//                    transferAccount.setBalance(rs2.getInt("balance"));
-//                    session.setAttribute("transfer_acc", transferAccount);
-//                }
-//                view = "transferComplete";
-//            }
+
+            } else if (transfer.getAccountType().equals("Savings")) {
+                ResultSet rs2 = ps2.executeQuery();
+                Savings transferAccount = new Savings();
+                while (rs2.next()) {
+                    Savings transferSAccount = new Savings();
+                    transferAccount.setAccount_id(rs2.getInt("account_id"));
+                    transferAccount.setUser_id(rs2.getInt("user_id"));
+                    transferAccount.setCheq_id(rs2.getInt("cheq_id"));
+                    transferAccount.setBalance(rs2.getInt("balance"));
+                    //session.setAttribute("transfer_acc", transferAccount);
+                }
+                transferAccount.transferAmount(transfer.getAmountTransferred());
+                transferAccount.withdrawAmount(transfer.getAmountTransferred());
+//               request.setAttribute("transferAccount", transferAccount);
+//               view="transferComplete";
+//                //update db
+                PreparedStatement ps3 = con.prepareStatement("UPDATE chequing_acc_table SET balance=? where account_id=?");
+                ps3.setDouble(1, transferAccount.getBalance());
+                ps3.setInt(2, transferAccount.getAccount_id());
+                ps3.executeUpdate();
+//                
+                view = "transferComplete";
+            }
         } catch (Exception e) {
             e.printStackTrace();
             {
 
             }
-
 
         }
         return view;
@@ -295,7 +306,8 @@ public class CustomerController {
             return view;
         }
     }
-        public static String createAccount(HttpServletRequest request) throws SQLException, ClassNotFoundException {
+
+    public static String createAccount(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         String view = "redirect:";
         Random r = new Random();
         int Low = 100000000;
@@ -466,4 +478,3 @@ public class CustomerController {
         return view;
     }
 }
-
