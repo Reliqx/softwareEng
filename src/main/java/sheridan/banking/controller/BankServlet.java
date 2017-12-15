@@ -58,6 +58,18 @@ public class BankServlet extends HttpServlet {
                 showNext = CustomerController.viewTransactions(request);
                 break;
             }
+            case "/viewTransfer.do":{
+                showNext = CustomerController.viewTransfer(request);
+                break;
+            }
+            case "/confirmTransfer.do":{
+                showNext = CustomerController.makeTransfer(request);
+                break;
+            }   
+                        case "/makeTransfer.do":{
+                showNext = CustomerController.makeTransfer(request);
+                break;
+            }  
         }
 
         //String greeting = getInitParameter("greeting");

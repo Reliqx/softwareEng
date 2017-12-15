@@ -115,9 +115,9 @@ public class CustomerController {
             return "expired"; // show "your session has expired" with "expired.jsp"
         } else {
             view = "viewSummary";
-           
+
         }
-         return view;
+        return view;
     }
 
     public static String viewTransactions(HttpServletRequest request) {
@@ -134,7 +134,7 @@ public class CustomerController {
             int account_id = account.getAccount_id();
             ps.setInt(1, account_id);
             ResultSet rs = ps.executeQuery();
-            
+
             Chequing chequing = (Chequing) session.getAttribute("chequing_acc");
             Savings savings = (Savings) session.getAttribute("savings_acc");
             //creating the transaction class with balances from the accounts
@@ -153,25 +153,23 @@ public class CustomerController {
                 transaction.setDesc(rs.getString("desc"));
                 transaction.setType(rs.getString("type"));
                 transaction.setAccount_type(rs.getString("account_type"));
-                if(transaction.getAccount_type().equals("Chequing") && transaction.getType().contains("W")){
-                    ChequingBalance = ChequingBalance - transaction.getAmount();               
+                if (transaction.getAccount_type().equals("Chequing") && transaction.getType().contains("W")) {
+                    ChequingBalance = ChequingBalance - transaction.getAmount();
                     transaction.setCheq_balance(ChequingBalance);
                     transaction.setSavings_balance(SavingsBalance);
-                }
-                else if(transaction.getAccount_type().equals("Chequing") && transaction.getType().contains("D")){
+                } else if (transaction.getAccount_type().equals("Chequing") && transaction.getType().contains("D")) {
                     ChequingBalance = ChequingBalance + transaction.getAmount();
-                   transaction.setCheq_balance(ChequingBalance); 
-                   transaction.setSavings_balance(SavingsBalance);
+                    transaction.setCheq_balance(ChequingBalance);
+                    transaction.setSavings_balance(SavingsBalance);
 
-                }
-                else if(transaction.getAccount_type().equals("Savings") && transaction.getType().contains("W")){
+                } else if (transaction.getAccount_type().equals("Savings") && transaction.getType().contains("W")) {
                     SavingsBalance = SavingsBalance - transaction.getAmount();
                     transaction.setSavings_balance(SavingsBalance);
                     transaction.setCheq_balance(ChequingBalance);
 
-                }else if(transaction.getAccount_type().equals("Savings") && transaction.getType().contains("D")){
-                     SavingsBalance = SavingsBalance + transaction.getAmount();
-                    transaction.setSavings_balance(SavingsBalance);    
+                } else if (transaction.getAccount_type().equals("Savings") && transaction.getType().contains("D")) {
+                    SavingsBalance = SavingsBalance + transaction.getAmount();
+                    transaction.setSavings_balance(SavingsBalance);
                     transaction.setCheq_balance(ChequingBalance);
                 }
                 //add transaction to an array list
@@ -179,10 +177,42 @@ public class CustomerController {
                 session.setAttribute("transactList", transactionList);
                 view = "viewTransac";
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return view;
+    }
+
+    public static String viewTransfer(HttpServletRequest request) {
+        String view = "redirect:";
+        HttpSession session = request.getSession();
+        if (session == null || session.getAttribute("customer") == null) {
+            return "expired"; // show "your session has expired" with "expired.jsp"
+        } else {
+            view = "viewTransfer";
+        }
+         return view ;
+    }
+   
+public static String confirmTransfer(HttpServletRequest request) {
+        String view = "redirect:";
+        HttpSession session = request.getSession();
+        int accountNoTransfer = Integer.parseInt(request.getParameter("accountNo"));
+        double amountTransfer = Double.parseDouble(request.getParameter("amount"));
+        String accountType = request.getParameter("account_type");
+        System.out.println(accountType);
+        view = "viewTransfer";
+        return view;
+    }
+public static String makeTransfer(HttpServletRequest request) {
+        String view = "redirect:";
+        HttpSession session = request.getSession();
+        int accountNoTransfer = Integer.parseInt(request.getParameter("accountNo"));
+        double amountTransfer = Double.parseDouble(request.getParameter("amount"));
+        String accountType = request.getParameter("account_type");
+        System.out.println(accountType);
+        view = "viewTransfer";
         return view;
     }
 
