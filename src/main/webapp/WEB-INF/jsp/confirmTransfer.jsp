@@ -17,19 +17,19 @@
         <form method="get" action="<c:url value="makeTransfer.do"/>">
             <p>
                 <label for="first">Account No: &nbsp;</label>
-                <span"><c:out value="${transfer.accountNoTransfer}"/></span>
+                <span><c:out value="${transfer.accountNoTransfer}"/></span>
             </p>
             <p>
                 <label for="amount">Amount: &nbsp; </label>
-                <span ><c:out value="${transfer.amountTransferred}"/></span>
+                <span><c:out value="${transfer.amountTransferred}"/></span>
             </p>
             <p>
                 <label for="account_type">Account To Transfer To: &nbsp;</label>
-                <span ><c:out value="${transfer.accountTarget}"/></span>
+                <span><c:out value="${transfer.accountTarget}"/></span>
             </p>
             <p>
                 <label for="account_type">Account To Transfer From: &nbsp;</label>
-                <span style="background-color:gray;"><c:out value="${transfer.accountType}"/></span>
+                <span><c:out value="${transfer.accountType}"/></span>
             </p>
 
             <p>

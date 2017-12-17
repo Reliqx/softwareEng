@@ -306,6 +306,16 @@ public class CustomerController {
             return view;
         }
     }
+    
+    public static String payBills (HttpServletRequest request){
+        String view = "redirect:";
+        //query the bill where the account number of the user matches
+        //provide a list view of the bills
+        //add a pay option if its not paid
+        //when hit the pay button it goes the the confirmation screen and checks if the user has enough funds
+        //when paid update the bill table with the paid option set to "yes"
+        return view;
+    }
 
     public static String createAccount(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         String view = "redirect:";
