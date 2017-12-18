@@ -19,10 +19,12 @@
             <ul type="square">
                 <li><a href="<c:url value="createAccount.do"/>">Create Account</a></li>&nbsp;
                 <li><a href="<c:url value="viewAccounts.do"/>">Delete Account</a></li>&nbsp;
-                <li><a href="<c:url value="createStatement.do"/>">Create Statement</a></li>&nbsp;
+                <li><a href="<c:url value="createBill.do"/>">Create Statement</a></li>&nbsp;
             </ul>
 
 
         </div>
+        <c:url value="login.do" var="logout"> </c:url>
+        <p><a href="${logout}">Logout</a> </p>   
     </body>
 </html>

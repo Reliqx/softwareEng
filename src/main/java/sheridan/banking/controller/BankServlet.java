@@ -37,13 +37,18 @@ public class BankServlet extends HttpServlet {
         String showNext = null;
 
         switch (action) {
+            case "/createBill.do": {
+                showNext = CustomerController.createBill(request);
+                break;
+            }
+
             case "/login.do": {
                 showNext = CustomerController.login(request);
                 CustomerController.loadAccount(request);
                 break;
 
             }
-            case "/customize.do":{
+            case "/customize.do": {
                 showNext = CustomerController.accountSettings(request);
                 break;
             }

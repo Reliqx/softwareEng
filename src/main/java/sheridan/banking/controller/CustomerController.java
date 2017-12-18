@@ -26,6 +26,7 @@ import javax.servlet.http.HttpSession;
  */
 public class CustomerController {
 
+    //redirects to the main menu
     public static String mainMenu(HttpServletRequest request) {
         String view = "redirect:";
         HttpSession session = request.getSession();
@@ -37,6 +38,7 @@ public class CustomerController {
         return view;
     }
 
+    //redirects to edit
     public static String edit(HttpServletRequest request) {
         String view = "redirect:";
         HttpSession session = request.getSession();
@@ -48,6 +50,7 @@ public class CustomerController {
         return view;
     }
 
+    //redirects to adminMenu
     public static String adminMenu(HttpServletRequest request) {
         String view = "redirect:";
         HttpSession session = request.getSession();
@@ -59,6 +62,7 @@ public class CustomerController {
         return view;
     }
 
+    //updates the account settings of the user dependent on the input text boxes
     public static String accountSettings(HttpServletRequest request) {
         String view = "redirect:";
         try {
@@ -104,6 +108,7 @@ public class CustomerController {
         return view;
     }
 
+    //logins the user
     public static String login(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         String user = request.getParameter("user");
         String pass = request.getParameter("pass");
@@ -143,6 +148,7 @@ public class CustomerController {
         return view;
     }
 
+    //loads the account of the user as he logs in
     public static void loadAccount(HttpServletRequest request) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -155,7 +161,7 @@ public class CustomerController {
             int userID = customer.getUser_id();
             ps.setInt(1, userID);
             ResultSet rs = ps.executeQuery();
-
+            //grabs the account information
             while (rs.next()) {
                 Account account = new Account();
                 account.setAccount_id(rs.getInt("account_id"));
@@ -165,6 +171,7 @@ public class CustomerController {
                 session.setAttribute("account", account);
 
             }
+            //grabs the chequing and savings information
             PreparedStatement ps2 = con.prepareStatement("select * from chequing_acc_table where user_id=?");
             PreparedStatement ps3 = con.prepareStatement("select * from savings_acc_table where user_id=?");
             ps2.setInt(1, userID);
@@ -195,6 +202,7 @@ public class CustomerController {
         }
     }
 
+    //redirects to view the summary
     public static String viewSummary(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         String view = "redirect:";
         HttpSession session = request.getSession();
@@ -207,6 +215,7 @@ public class CustomerController {
         return view;
     }
 
+    //views the user's transactions based on his account id within the transaction table
     public static String viewTransactions(HttpServletRequest request) {
         String view = "redirect:";
         //display any transactions that is relative to the account id
@@ -271,6 +280,7 @@ public class CustomerController {
         return view;
     }
 
+    //redirects to viewTransfer
     public static String viewTransfer(HttpServletRequest request) {
         String view = "redirect:";
         HttpSession session = request.getSession();
@@ -281,6 +291,7 @@ public class CustomerController {
         }
         return view;
     }
+//displays the transfer the user has requested
 
     public static String confirmTransfer(HttpServletRequest request) {
         String view = "redirect:";
@@ -303,6 +314,7 @@ public class CustomerController {
         return view;
     }
 //sql statements here
+//issues the transfer
 
     public static String makeTransfer(HttpServletRequest request) {
         String view = "redirect:";
@@ -427,6 +439,7 @@ public class CustomerController {
         }
         return view;
     }
+//redirects to view the balance
 
     public static String viewBalance(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         String view = "redirect:";
@@ -439,6 +452,7 @@ public class CustomerController {
         }
         return view;
     }
+//redirects to view the bills, quering the bills within the bills table that is relevant to the user's account id
 
     public static String viewBills(HttpServletRequest request) {
         String view = "redirect:";
@@ -478,6 +492,7 @@ public class CustomerController {
 
         //provide a list view of the bills
     }
+//redirects the user to the bill payment page if the user needs to pay a bill
 
     public static String confirmPayBill(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         String view = "redirect:";
@@ -500,6 +515,7 @@ public class CustomerController {
         }
         return view;
     }
+//issues the sql command to pay the bill
 
     public static String billPaid(HttpServletRequest request) throws SQLException, ClassNotFoundException {
         String view = "redirect:";
@@ -514,7 +530,7 @@ public class CustomerController {
         PreparedStatement ps2 = con.prepareStatement("UPDATE savings_acc_table SET balance=? WHERE account_id=?");
         //insert a transaction value to the account
         //PreparedStatement ps3 = con.prepareStatement("INSERT INTO transactions (desc, type, amount, account_id, account_type) VALUES (?,?,?,?,?)");
-        //PreparedStatement ps3 = con.prepareStatement("INSERT INTO transactions (desc, type, amount, account_id, account_type) VALUES (?,?,?,?,?)");
+        PreparedStatement ps3 = con.prepareStatement("INSERT INTO transactions (desc, type, amount, account_id, account_type) VALUES (?,?,?,?,?)");
         //update the bill table
         PreparedStatement ps4 = con.prepareStatement("UPDATE bills SET paid=? WHERE bill_id=?");
         try {
@@ -577,6 +593,13 @@ public class CustomerController {
                     //give error (not enough funds)
                 }
             }
+            ps3.setString(1, "Bill Payment");
+            ps3.setString(2, "W");
+            ps3.setDouble(3, paymentBill.getAmount());
+            ps3.setInt(4, paymentBill.getAccountID());
+            ps3.setString(5, accountOption);
+            ps3.executeUpdate();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -765,4 +788,39 @@ public class CustomerController {
         }
         return view;
     }
+
+    public static String createBill(HttpServletRequest request) {
+        String view = "redirect:";
+        HttpSession session = request.getSession();
+
+        if (session == null || session.getAttribute("customer") == null) {
+            return "expired"; // show "your session has expired" with "expired.jsp"
+        } else {
+
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sheridanbank?", "root", "root");
+                //update chequing account table with new amount
+                PreparedStatement ps = con.prepareStatement("INSERT INTO bills (bill_id, account_id, amount, paid) VALUES (?,?,?,?)");
+
+                String billID = request.getParameter("billID");
+                String accountID = request.getParameter("accountID");
+                String amount = request.getParameter("amount");
+                String paid = "NO";
+
+                ps.setString(1, billID);
+                ps.setString(2, accountID);
+                ps.setString(3, amount);
+                ps.setString(4, paid);
+
+                ps.executeUpdate();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        view = "createBill";
+        return view;
+    }
+
 }
