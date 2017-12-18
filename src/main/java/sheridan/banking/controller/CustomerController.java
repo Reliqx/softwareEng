@@ -303,17 +303,151 @@ public class CustomerController {
             return "expired"; // show "your session has expired" with "expired.jsp"
         } else {
             view = "viewBalance";
-            return view;
+
         }
+        return view;
     }
-    
-    public static String payBills (HttpServletRequest request){
+
+    public static String viewBills(HttpServletRequest request) {
         String view = "redirect:";
-        //query the bill where the account number of the user matches
+        ArrayList<Bill> billList = new ArrayList<>();
+        HttpSession session = request.getSession();
+        if (session == null || session.getAttribute("customer") == null) {
+            return "expired"; // show "your session has expired" with "expired.jsp"
+        } else {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+                Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sheridanbank?", "root", "root");
+                PreparedStatement ps = con.prepareStatement("select * from bills where account_id=?");
+                Account account = (Account) session.getAttribute("account");
+
+                ps.setInt(1, account.getAccount_id());
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) {
+                    Bill customerBill = new Bill();
+                    customerBill.setAccountID(rs.getInt("account_id"));
+                    customerBill.setBilID(rs.getInt("bill_id"));
+                    customerBill.setAmount(rs.getInt("amount"));
+                    customerBill.setPaid(rs.getString("paid"));
+                    billList.add(customerBill);
+                }
+                session.setAttribute("billList", billList);
+
+                view = "viewBills";
+            } catch (Exception e) {
+                e.printStackTrace();
+                {
+
+                }
+
+            }
+        }
+        return view;
+
         //provide a list view of the bills
-        //add a pay option if its not paid
-        //when hit the pay button it goes the the confirmation screen and checks if the user has enough funds
-        //when paid update the bill table with the paid option set to "yes"
+    }
+
+    public static String confirmPayBill(HttpServletRequest request) throws SQLException, ClassNotFoundException {
+        String view = "redirect:";
+        ArrayList<Bill> billList = new ArrayList<>();
+        HttpSession session = request.getSession();
+        Bill paymentBill = new Bill();
+        billList = (ArrayList<Bill>) session.getAttribute("billList");
+        try {
+            for (Bill bill : billList) {
+                if (bill.bilID == Integer.parseInt(request.getParameter("bill_id"))) {
+                    paymentBill = bill;
+                    session.setAttribute("paymentBill", paymentBill);
+                    break;
+                }
+            }
+            view = "payBill";
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return view;
+    }
+
+    public static String billPaid(HttpServletRequest request) throws SQLException, ClassNotFoundException {
+        String view = "redirect:";
+        HttpSession session = request.getSession();
+        String accountOption = request.getParameter("payment_account");
+        Bill paymentBill = (Bill) session.getAttribute("paymentBill");
+
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sheridanbank?", "root", "root");
+        //update chequing account table with new amount
+        PreparedStatement ps = con.prepareStatement("UPDATE chequing_acc_table SET balance=? WHERE account_id=?");
+        PreparedStatement ps2 = con.prepareStatement("UPDATE savings_acc_table SET balance=? WHERE account_id=?");
+        //insert a transaction value to the account
+        //PreparedStatement ps3 = con.prepareStatement("INSERT INTO transactions (desc, type, amount, account_id, account_type) VALUES (?,?,?,?,?)");
+        //PreparedStatement ps3 = con.prepareStatement("INSERT INTO transactions (desc, type, amount, account_id, account_type) VALUES (?,?,?,?,?)");
+        //update the bill table
+        PreparedStatement ps4 = con.prepareStatement("UPDATE bills SET paid=? WHERE bill_id=?");
+        try {
+            if (accountOption.contains("Chequing")) {
+                Chequing cheq_acc = (Chequing) session.getAttribute("chequing_acc");
+                //System.out.println(cheq_acc.getBalance();
+                if (cheq_acc.getBalance() > paymentBill.getAmount()) {
+                    //subtract the balance of the account
+                    cheq_acc.withdrawAmount(paymentBill.getAmount());
+                    //update the chequing account table
+                    ps.setDouble(1, cheq_acc.getBalance());
+                    ps.setInt(2, cheq_acc.getAccount_id());
+                    ps.executeUpdate();
+                    //insert a transaction in the transaction table                   
+//                    ps3.setString(1, "Bill Payment");
+//                    ps3.setString(2, "W");
+//                    ps3.setDouble(3, paymentBill.getAmount());
+//                    ps3.setInt(4, paymentBill.getAccountID());
+//                    ps3.setString(5, "Chequing");
+//                    ps3.executeUpdate();
+                    //update the bill table (altering the payment status
+                    ps4.setString(1, "YES");
+                    ps4.setInt(2, paymentBill.getBilID());
+                    ps4.executeUpdate();
+                    view = "redirect:viewBills.do";
+               
+                } else {
+                    String paymentError = "not enough funds in chequing";
+                    session.setAttribute("paymentError", paymentError);
+                    view = "redirect:viewBills.do";
+                    //give error (not enough funds)
+                }
+
+            } else if (accountOption.contains("Savings")) {
+                
+                Savings sav_acc = (Savings) session.getAttribute("savings_acc");
+                if (sav_acc.getBalance() >= paymentBill.getAmount()) {
+                    //subtract the balance of the account
+                    sav_acc.withdrawAmount(paymentBill.getAmount());
+                    //update the chequing account table
+                    ps2.setDouble(1, sav_acc.getBalance());
+                    ps2.setInt(2, sav_acc.getAccount_id());
+                    ps2.executeUpdate();
+                    //insert a transaction in the transaction table                   
+//                    ps3.setString(1, "Bill Payment");
+//                    ps3.setString(2, "W");
+//                    ps3.setDouble(3, paymentBill.getAmount());
+//                    ps3.setInt(4, paymentBill.getAccountID());
+//                    ps3.setString(5, "Chequing");
+//                    ps3.executeUpdate();
+                    //update the bill table (altering the payment status
+                    ps4.setString(1, "YES");
+                    ps4.setInt(2, paymentBill.getBilID());
+                    ps4.executeUpdate();
+                    view = "redirect:viewBills.do";
+                } else {
+                    String paymentError = "not enough funds in chequing";
+                    session.setAttribute("paymentError", paymentError);
+                    view = "redirect:viewBills.do";
+                    //give error (not enough funds)
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return view;
     }
 
