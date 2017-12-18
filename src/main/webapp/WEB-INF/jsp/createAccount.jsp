@@ -3,7 +3,7 @@
     Created on : 12-Dec-2017, 2:21:35 PM
     Author     : reliq
 --%>
- 
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -13,14 +13,14 @@
     </head>
     <body>
         <h1>Create Account</h1>
- 
+
         <form action="createAccount.do" method="POST">
- 
+
             <p>
                 <label> Username </label>
                 <input type="text" maxlength='15' size='15' name="username" required/>
             </p>
- 
+
             <p>
                 <label> Password </label>
                 <input type="password" maxlength='15' size='15' name="password" required/>
@@ -54,8 +54,11 @@
             <label>&nbsp;</label>
             <input type="submit" value="Create Account">    
         </p>
-        <button type="button" name="back" onclick="history.back()">Back</button>
+        <c:url value="adminHome.do" var="adminMenu"> </c:url>
+        <p><a href="${adminMenu}">Main Menu</a> </p>   
+
+
     </form>
- 
+
 </body>
 </html>

@@ -43,8 +43,12 @@ public class BankServlet extends HttpServlet {
                 break;
 
             }
-            case "/home.do":{
+            case "/home.do": {
                 showNext = CustomerController.mainMenu(request);
+                break;
+            }
+            case "/adminHome.do": {
+                showNext = CustomerController.adminMenu(request);
                 break;
             }
             case "/createAccount.do": {
@@ -85,15 +89,15 @@ public class BankServlet extends HttpServlet {
                 showNext = CustomerController.makeTransfer(request);
                 break;
             }
-            case "/viewBills.do":{
+            case "/viewBills.do": {
                 showNext = CustomerController.viewBills(request);
                 break;
             }
-            case "/payBill.do":{
+            case "/payBill.do": {
                 showNext = CustomerController.confirmPayBill(request);
                 break;
             }
-            case "/billPaid.do":{
+            case "/billPaid.do": {
                 showNext = CustomerController.billPaid(request);
                 break;
             }

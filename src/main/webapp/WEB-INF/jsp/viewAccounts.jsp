@@ -29,7 +29,7 @@
                                 <td>${v.province}</td>
                                 <td>${v.postalCode}</td>
                                 <td>${v.phoneNumber}</td>
- 
+
                                 <c:url value="deleteAccount.do" var="ref_delete">
                                     <c:param name="user_id" value="${v.user_id}"/>
                                 </c:url>
@@ -42,7 +42,8 @@
                     <p class="message">Nobody registered yet.</p>
                 </c:otherwise>
             </c:choose>
-            <button type="button" name="back" onclick="history.back()">Back</button>
+            <c:url value="adminHome.do" var="adminMenu"> </c:url>
+            <p><a href="${adminMenu}">Main Menu</a> </p>  
         </main>
     </body>
 </html>
