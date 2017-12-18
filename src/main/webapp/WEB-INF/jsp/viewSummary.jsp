@@ -35,6 +35,7 @@
 
             </tbody>
         </table>
-
+        <c:url value="home.do" var="menu"> </c:url>
+        <p><a href="${menu}">Main Menu</a> </p>   
     </body>
 </html>

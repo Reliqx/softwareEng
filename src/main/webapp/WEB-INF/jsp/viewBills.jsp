@@ -14,7 +14,7 @@
     </head>
     <body>
 
-        <h1>Bills for <c:out value="${customer.username}"/></h1>
+        <h1>Bills for <c:out value="${customer.username}"/></h1>  
         <table border="2" width="3" cellpadding="5">
             <caption>Account ID: <c:out value="${account.account_id}"/> </caption>
             <thead>
@@ -34,15 +34,17 @@
                         <td>${v.amount}</td>
                         <td>${v.paid}</td>
                         <c:if test = "${v.paid == 'NO'}">
-                        <c:url value="payBill.do" var="ref_pay">
-                            <c:param name="bill_id" value="${v.bilID}"/>
-                        </c:url>
-                        <td><a href="${ref_pay}">Pay</a></td>
+                            <c:url value="payBill.do" var="ref_pay">
+                                <c:param name="bill_id" value="${v.bilID}"/>
+                            </c:url>
+                            <td><a href="${ref_pay}">Pay</a></td>
                         </c:if>
                     </c:forEach>
 
             </tbody>
+
         </table>
-            <p> ${cheq_test.balance}</p>
+        <c:url value="home.do" var="menu"> </c:url>
+        <p><a href="${menu}">Main Menu</a> </p>
     </body>
 </html>

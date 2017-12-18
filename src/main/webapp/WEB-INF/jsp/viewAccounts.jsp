@@ -23,7 +23,13 @@
                                 <td>${v.user_id}</td>
                                 <td>${v.username}</td>
                                 <td>${v.role}</td>
-
+                                <td>${v.email}</td>
+                                <td>${v.address}</td>
+                                <td>${v.city}</td>
+                                <td>${v.province}</td>
+                                <td>${v.postalCode}</td>
+                                <td>${v.phoneNumber}</td>
+ 
                                 <c:url value="deleteAccount.do" var="ref_delete">
                                     <c:param name="user_id" value="${v.user_id}"/>
                                 </c:url>
@@ -36,7 +42,7 @@
                     <p class="message">Nobody registered yet.</p>
                 </c:otherwise>
             </c:choose>
-                    <button type="button" name="back" onclick="history.back()">Back</button>
+            <button type="button" name="back" onclick="history.back()">Back</button>
         </main>
     </body>
 </html>

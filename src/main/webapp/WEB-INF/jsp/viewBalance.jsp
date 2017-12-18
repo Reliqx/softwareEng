@@ -15,7 +15,7 @@
     <body>
 
         <h1>Account Balance for <c:out value="${customer.username}"/></h1>
-               <table border="2" width="3" cellpadding="5">
+        <table border="2" width="3" cellpadding="5">
             <caption>Account ID: <c:out value="${account.account_id}"/> </caption>
             <thead>
                 <tr>
@@ -38,5 +38,7 @@
 
             </tbody>
         </table>
+        <c:url value="home.do" var="menu"> </c:url>
+        <p><a href="${menu}">Main Menu</a> </p>   
     </body>
 </html>

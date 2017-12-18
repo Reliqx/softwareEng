@@ -26,23 +26,25 @@
             <p>
                 <label for="account_target">Account to Transfer TO: </label>
                 <select name="accountTarget">
-            <option>Chequing</option>
-            <option>Savings</option>
-                        </select>
+                    <option>Chequing</option>
+                    <option>Savings</option>
+                </select>
 
-        </p>
-        <p>
-            <label for="account_type">Account To Transfer FROM:</label>
-            <select name="account_type">
-                <option>Chequing  <c:out value="${chequing_acc.balance}"/></option>
-                <option>Savings  <c:out value="${savings_acc.balance}"/></option>
-            </select>
-        </p>
+            </p>
+            <p>
+                <label for="account_type">Account To Transfer FROM:</label>
+                <select name="account_type">
+                    <option>Chequing  <c:out value="${chequing_acc.balance}"/></option>
+                    <option>Savings  <c:out value="${savings_acc.balance}"/></option>
+                </select>
+            </p>
 
-        <p>
-            <label>&nbsp;</label>
-            <input type="submit" value="Next">
-        </p>
-    </form>
-</body>
+            <p>
+                <label>&nbsp;</label>
+                <input type="submit" value="Next">
+            </p>
+        </form>
+        <c:url value="home.do" var="menu"> </c:url>
+        <p><a href="${menu}">Main Menu</a> </p>   
+    </body>
 </html>

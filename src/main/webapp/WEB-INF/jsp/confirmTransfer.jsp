@@ -37,5 +37,10 @@
                 <input type="submit" value="Transfer Funds">
             </p>
         </form>
+        <c:url value="viewTransfer.do" var="viewTransfer"> </c:url>
+        <p><a href="${viewTransfer}">Edit Transfer</a> </p>
+        <c:url value="home.do" var="menu"> </c:url>
+        <p><a href="${menu}">Main Menu</a> </p>     
+
     </body>
 </html>

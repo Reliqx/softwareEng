@@ -43,6 +43,10 @@ public class BankServlet extends HttpServlet {
                 break;
 
             }
+            case "/home.do":{
+                showNext = CustomerController.mainMenu(request);
+                break;
+            }
             case "/createAccount.do": {
                 showNext = CustomerController.createAccount(request);
                 break;

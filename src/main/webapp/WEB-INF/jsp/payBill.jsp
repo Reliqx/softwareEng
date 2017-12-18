@@ -31,7 +31,10 @@
             </select>
             <input type="submit" value="Pay" />
         </form>
-
+        <c:url value="viewBills.do" var="viewBills"> </c:url>
+        <p><a href="${viewBills}">View Bills</a> </p>
+        <c:url value="home.do" var="menu"> </c:url>
+        <p><a href="${menu}">Main Menu</a> </p>
     </tbody>
 </table>
 </body>
