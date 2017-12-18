@@ -67,7 +67,7 @@ public class CustomerController {
             PreparedStatement ps = con.prepareStatement("UPDATE users SET email=?, address=?, city=?, province=?,"
                     + " postalCode=?, phoneNumber=? WHERE user_id=?");
             HttpSession session = request.getSession();
-            
+
             if (session == null || session.getAttribute("customer") == null) {
                 return "expired"; // show "your session has expired" with "expired.jsp"
             } else {
@@ -78,14 +78,14 @@ public class CustomerController {
                 String province = request.getParameter("province");
                 String postalCode = request.getParameter("postalcode");
                 String phoneNum = request.getParameter("phonenum");
-                
+
                 customer.setAddress(address);
                 customer.setEmail(email);
                 customer.setCity(city);
                 customer.setProvince(province);
                 customer.setPostalCode(postalCode);
                 customer.setPhoneNumber(phoneNum);
-                
+
                 ps.setString(1, email);
                 ps.setString(2, address);
                 ps.setString(3, city);
@@ -94,7 +94,7 @@ public class CustomerController {
                 ps.setString(6, phoneNum);
                 ps.setInt(7, customer.getUser_id());
                 session.setAttribute("customer", customer);
-                
+
                 ps.executeUpdate();
                 view = "viewSettings";
             }
@@ -311,6 +311,8 @@ public class CustomerController {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sheridanbank?", "root", "root");
             Transfer transfer = (Transfer) session.getAttribute("transfer");
+            Chequing cheq_acc = (Chequing) session.getAttribute("chequing_acc");
+            Savings saving_acc = (Savings) session.getAttribute("savings_acc");
             PreparedStatement ps = con.prepareStatement("select * from chequing_acc_table where account_id=?");
             PreparedStatement ps2 = con.prepareStatement("select * from savings_acc_table where account_id=?");
             //gets the information of the account we're transferring
@@ -336,39 +338,85 @@ public class CustomerController {
 
                 //add the transfer amount to the transfer account
                 transferAccount.transferAmount(transfer.getAmountTransferred());
-                transferAccount.withdrawAmount(transfer.getAmountTransferred());
+                //CHECK WHERE WE ARE WITHDRAWING FROM 
+                if (transfer.getAccountType().contains("Chequing")) {
+                    cheq_acc.withdrawAmount(transfer.getAmountTransferred());
 //               request.setAttribute("transferAccount", transferAccount);
 //               view="transferComplete";
-//                //update db
-                PreparedStatement ps3 = con.prepareStatement("UPDATE chequing_acc_table SET balance=? where account_id=?");
-                ps3.setDouble(1, transferAccount.getBalance());
-                ps3.setInt(2, transferAccount.getAccount_id());
-                ps3.executeUpdate();
-//                
-                view = "transferComplete";
+//                //updates the account we're transferring TO
+                    PreparedStatement ps3 = con.prepareStatement("UPDATE chequing_acc_table SET balance=? where account_id=?");
+                    ps3.setDouble(1, transferAccount.getBalance());
+                    ps3.setInt(2, transferAccount.getAccount_id());
+                    ps3.executeUpdate();
+                    //updates the account we're transferring from
+                    PreparedStatement ps4 = con.prepareStatement("UPDATE chequing_acc_table SET balance=? where account_id=?");
+                    ps4.setDouble(1, cheq_acc.getBalance());
+                    ps4.setInt(2, cheq_acc.getAccount_id());
+                    ps4.executeUpdate();
+                    view = "transferComplete";
+                } else if (transfer.getAccountType().contains("Savings")) {
+                    saving_acc.withdrawAmount(transfer.getAmountTransferred());
+//               request.setAttribute("transferAccount", transferAccount);
+//               view="transferComplete";
+//                //updates the account we're transferring TO
+                    PreparedStatement ps3 = con.prepareStatement("UPDATE chequing_acc_table SET balance=? where account_id=?");
+                    ps3.setDouble(1, transferAccount.getBalance());
+                    ps3.setInt(2, transferAccount.getAccount_id());
+                    ps3.executeUpdate();
+                    //updates the account we're transferring from
+                    PreparedStatement ps4 = con.prepareStatement("UPDATE savings_acc_table SET balance=? where account_id=?");
+                    ps4.setDouble(1, saving_acc.getBalance());
+                    ps4.setInt(2, saving_acc.getAccount_id());
+                    ps4.executeUpdate();
+                    view = "transferComplete";
+                }
 
-            } else if (transfer.getAccountType().equals("Savings")) {
+            } else if (transfer.getAccountType().contains("Savings")) {
                 ResultSet rs2 = ps2.executeQuery();
-                Savings transferAccount = new Savings();
+                Savings transferSAccount = new Savings();
                 while (rs2.next()) {
-                    Savings transferSAccount = new Savings();
-                    transferAccount.setAccount_id(rs2.getInt("account_id"));
-                    transferAccount.setUser_id(rs2.getInt("user_id"));
-                    transferAccount.setCheq_id(rs2.getInt("cheq_id"));
-                    transferAccount.setBalance(rs2.getInt("balance"));
+                    transferSAccount.setAccount_id(rs2.getInt("account_id"));
+                    transferSAccount.setUser_id(rs2.getInt("user_id"));
+                    transferSAccount.setCheq_id(rs2.getInt("saving_id"));
+                    transferSAccount.setBalance(rs2.getInt("balance"));
                     //session.setAttribute("transfer_acc", transferAccount);
                 }
-                transferAccount.transferAmount(transfer.getAmountTransferred());
-                transferAccount.withdrawAmount(transfer.getAmountTransferred());
+
+                transferSAccount.transferAmount(transfer.getAmountTransferred());
+
+                if (transfer.getAccountType().contains("Savings")) {
+                    saving_acc.withdrawAmount(transfer.getAmountTransferred());
 //               request.setAttribute("transferAccount", transferAccount);
 //               view="transferComplete";
 //                //update db
-                PreparedStatement ps3 = con.prepareStatement("UPDATE savings_acc_table SET balance=? where account_id=?");
-                ps3.setDouble(1, transferAccount.getBalance());
-                ps3.setInt(2, transferAccount.getAccount_id());
-                ps3.executeUpdate();
+                    PreparedStatement ps3 = con.prepareStatement("UPDATE savings_acc_table SET balance=? where account_id=?");
+                    ps3.setDouble(1, transferSAccount.getBalance());
+                    ps3.setInt(2, transferSAccount.getAccount_id());
+                    ps3.executeUpdate();
 //                
-                view = "transferComplete";
+
+                    PreparedStatement ps4 = con.prepareStatement("UPDATE savings_acc_table SET balance=? where account_id=?");
+                    ps4.setDouble(1, saving_acc.getBalance());
+                    ps4.setInt(2, saving_acc.getAccount_id());
+                    ps4.executeUpdate();
+                    view = "transferComplete";
+                } else if (transfer.getAccountType().contains("Chequing")) {
+                    cheq_acc.withdrawAmount(transfer.getAmountTransferred());
+//               request.setAttribute("transferAccount", transferAccount);
+//               view="transferComplete";
+//                //update db
+                    PreparedStatement ps3 = con.prepareStatement("UPDATE savings_acc_table SET balance=? where account_id=?");
+                    ps3.setDouble(1, transferSAccount.getBalance());
+                    ps3.setInt(2, transferSAccount.getAccount_id());
+                    ps3.executeUpdate();
+//                
+
+                    PreparedStatement ps4 = con.prepareStatement("UPDATE chequing_acc_table SET balance=? where account_id=?");
+                    ps4.setDouble(1, cheq_acc.getBalance());
+                    ps4.setInt(2, cheq_acc.getAccount_id());
+                    ps4.executeUpdate();
+                    view = "transferComplete";
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

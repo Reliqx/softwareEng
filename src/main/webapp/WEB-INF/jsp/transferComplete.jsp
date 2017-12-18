@@ -21,6 +21,6 @@
             
         </p>
         <p><a href="<c:url value="viewTransfer.do"/>">Make another Transfer?</a></p>
-        <p><a href="<c:url value="CustomerView.jsp"/>">Main Menu</a></p>
+        <p><a href="<c:url value="home.do"/>">Main Menu</a></p>
 </body>
 </html>
