@@ -37,6 +37,17 @@ public class CustomerController {
         return view;
     }
 
+    public static String edit(HttpServletRequest request) {
+        String view = "redirect:";
+        HttpSession session = request.getSession();
+        if (session == null || session.getAttribute("customer") == null) {
+            return "expired"; // show "your session has expired" with "expired.jsp"
+        } else {
+            view = "editSettings";
+        }
+        return view;
+    }
+
     public static String adminMenu(HttpServletRequest request) {
         String view = "redirect:";
         HttpSession session = request.getSession();
@@ -44,6 +55,51 @@ public class CustomerController {
             return "expired"; // show "your session has expired" with "expired.jsp"
         } else {
             view = "adminView";
+        }
+        return view;
+    }
+
+    public static String accountSettings(HttpServletRequest request) {
+        String view = "redirect:";
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/sheridanbank?", "root", "root");
+            PreparedStatement ps = con.prepareStatement("UPDATE users SET email=?, address=?, city=?, province=?,"
+                    + " postalCode=?, phoneNumber=? WHERE user_id=?");
+            HttpSession session = request.getSession();
+            
+            if (session == null || session.getAttribute("customer") == null) {
+                return "expired"; // show "your session has expired" with "expired.jsp"
+            } else {
+                Customer customer = (Customer) session.getAttribute("customer");
+                String email = request.getParameter("email");
+                String address = request.getParameter("address");
+                String city = request.getParameter("city");
+                String province = request.getParameter("province");
+                String postalCode = request.getParameter("postalcode");
+                String phoneNum = request.getParameter("phonenum");
+                
+                customer.setAddress(address);
+                customer.setEmail(email);
+                customer.setCity(city);
+                customer.setProvince(province);
+                customer.setPostalCode(postalCode);
+                customer.setPhoneNumber(phoneNum);
+                
+                ps.setString(1, email);
+                ps.setString(2, address);
+                ps.setString(3, city);
+                ps.setString(4, province);
+                ps.setString(5, postalCode);
+                ps.setString(6, phoneNum);
+                ps.setInt(7, customer.getUser_id());
+                session.setAttribute("customer", customer);
+                
+                ps.executeUpdate();
+                view = "viewSettings";
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
         return view;
     }
@@ -65,6 +121,12 @@ public class CustomerController {
                 customer.setUsername(user);
                 customer.setUser_id(rs.getInt("user_id"));
                 customer.setRole(rs.getString("role"));
+                customer.setEmail(rs.getString("email"));
+                customer.setAddress(rs.getString("address"));
+                customer.setCity(rs.getString("city"));
+                customer.setProvince(rs.getString("province"));
+                customer.setPostalCode(rs.getString("postalCode"));
+                customer.setPhoneNumber(rs.getString("phoneNumber"));
                 HttpSession session = request.getSession();
                 session.setAttribute("customer", customer);
                 if (customer.getRole().equals("Administrator")) {

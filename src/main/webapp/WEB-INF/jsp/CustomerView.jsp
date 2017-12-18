@@ -22,7 +22,7 @@
                 <li><a href="<c:url value="viewTransac.do"/>">View Statement</a></li>&nbsp;
                 <li><a href="<c:url value="viewTransfer.do"/>">Make Transfer</a></li>&nbsp;
                 <li><a href="<c:url value="viewBills.do"/>">Pay Utility Bills</a></li>&nbsp;
-                <li><a href="<c:url value="changeAccount.do"/>">Change Account Settings</a></li>&nbsp;
+                <li><a href="<c:url value="edit.do"/>">Change Account Settings</a></li>&nbsp;
             </ul>
                     <c:url value="login.do" var="logout"> </c:url>
         <p><a href="${logout}">Logout</a> </p>   
