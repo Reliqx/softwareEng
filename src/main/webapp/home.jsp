@@ -19,7 +19,6 @@
         <h1>Welcome To Sheridan Bank!</h1>
         <!--Redirect to the specific pages -->
         <p><a href="<c:url value="login.jsp"/>">Login</a></p>
-        <p><a href="<c:url value="register.jsp"/>">Register</a></p>
 
     </body>
 </html>

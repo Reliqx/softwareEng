@@ -782,7 +782,7 @@ public class CustomerController {
         String view = "redirect:";
         try {
             Customer.delete(request.getParameter("user_id"));
-            view = "viewAccounts";
+            view = "redirect:viewAccounts.do";
         } catch (NumberFormatException e) {
             e.printStackTrace();
         }
