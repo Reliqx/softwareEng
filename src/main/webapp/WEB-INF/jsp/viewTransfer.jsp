@@ -10,41 +10,59 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="WEB_INF/css/main.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <title>Transfer</title>
     </head>
     <body>
-        <h1>Transfer Funds</h1>
-        <form method="get" action="<c:url value="confirmTransfer.do"/>">
-            <p>
-                <label for="first">Account No:</label>
-                <input type="text" name="accountNo" value="" />
-            </p>
-            <p>
-                <label for="amount">Amount</label>
-                <input type="text" name="amount" value="" />
-            </p>
-            <p>
-                <label for="account_target">Account to Transfer TO: </label>
-                <select name="accountTarget">
-                    <option>Chequing</option>
-                    <option>Savings</option>
-                </select>
+        <div class="w3-main" style="margin-left:250px">
 
-            </p>
-            <p>
-                <label for="account_type">Account To Transfer FROM:</label>
-                <select name="account_type">
-                    <option>Chequing  <c:out value="${chequing_acc.balance}"/></option>
-                    <option>Savings  <c:out value="${savings_acc.balance}"/></option>
-                </select>
-            </p>
+            <div class="w3-row w3-padding-64">
+                <div class="w3-twothird w3-container">
+                    <h1>Transfer Funds</h1>
+                    <form method="get" action="<c:url value="confirmTransfer.do"/>">
+                        <p>
+                            <label for="first">Account No:</label>
+                            <input type="text" name="accountNo" value="" />
+                        </p>
+                        <p>
+                            <label for="amount">Amount</label>
+                            <input type="text" name="amount" value="" />
+                        </p>
+                        <p>
+                            <label for="account_target">Account to Transfer TO: </label>
+                            <select name="accountTarget">
+                                <option>Chequing</option>
+                                <option>Savings</option>
+                            </select>
 
-            <p>
-                <label>&nbsp;</label>
-                <input type="submit" value="Next">
-            </p>
-        </form>
-        <c:url value="home.do" var="menu"> </c:url>
-        <p><a href="${menu}">Main Menu</a> </p>   
+                        </p>
+                        <p>
+                            <label for="account_type">Account To Transfer FROM:</label>
+                            <select name="account_type">
+                                <option>Chequing  <c:out value="${chequing_acc.balance}"/></option>
+                                <option>Savings  <c:out value="${savings_acc.balance}"/></option>
+                            </select>
+                        </p>
+
+                        <p>
+                            <label>&nbsp;</label>
+                            <input type="submit" value="Next">
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="w3-top">
+            <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+                <a href="#" class="w3-bar-item w3-theme-l1"><img src="sheridanBank_logo.png" height="40" width="40" alt="Logo"></a>
+                    <c:url value="home.do" var="menu"> </c:url>
+                <a href="${menu}" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Main Menu</a>
+            </div>
+        </div> 
     </body>
 </html>

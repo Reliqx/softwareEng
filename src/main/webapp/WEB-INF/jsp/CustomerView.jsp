@@ -10,23 +10,40 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="WEB_INF/css/main.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-blue.css">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
         <title>Customer Account</title>
     </head>
     <body>
-        <h1>Welcome <c:out value="${customer.username}"/></h1>
-        
-        <div style="background-color:white;color:blue;padding:10px;">
-            <ul type="square">
-                <li><a href="<c:url value="viewSummary.do"/>">Account Summary </a></li>&nbsp;
-                <li><a href="<c:url value="viewBalance.do"/>">View Balance </a></li>&nbsp;
-                <li><a href="<c:url value="viewTransac.do"/>">View Statement</a></li>&nbsp;
-                <li><a href="<c:url value="viewTransfer.do"/>">Make Transfer</a></li>&nbsp;
-                <li><a href="<c:url value="viewBills.do"/>">Pay Utility Bills</a></li>&nbsp;
-                <li><a href="<c:url value="edit.do"/>">Change Account Settings</a></li>&nbsp;
-            </ul>
-                    <c:url value="login.do" var="logout"> </c:url>
-        <p><a href="${logout}">Logout</a> </p>   
-            
+        <div class="w3-main" style="margin-left:250px">
+
+            <div class="w3-row w3-padding-64">
+                <div class="w3-twothird w3-container">
+                    <h1>Welcome <c:out value="${customer.username}"/></h1>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="w3-top">
+            <div class="w3-bar w3-theme w3-top w3-left-align w3-large">
+                <a href="#" class="w3-bar-item w3-theme-l1"><img src="sheridanBank_logo.png" height="40" width="40" alt="Logo"></a>
+                <a href="<c:url value="viewSummary.do"/>" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Account Summary</a>
+                <a href="<c:url value="viewBalance.do"/>" class="w3-bar-item w3-button w3-hide-small w3-hover-white">View Balance</a>
+                <a href="<c:url value="viewTransac.do"/>" class="w3-bar-item w3-button w3-hide-small w3-hover-white">View Statement</a>
+                <a href="<c:url value="viewTransfer.do"/>" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Make Transfer</a>
+                <a href="<c:url value="viewBills.do"/>" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Pay Utility Bills</a>
+                <a href="<c:url value="edit.do"/>" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Change Account Settings</a>
+                <c:url value="login.do" var="logout"> </c:url>
+                <a href="${logout}" class="w3-bar-item w3-button w3-hide-small w3-hover-white">Logout</a>
+
+
+            </div>
         </div>
     </body>
 </html>
