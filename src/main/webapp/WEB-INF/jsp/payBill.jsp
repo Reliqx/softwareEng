@@ -28,7 +28,7 @@
                     <form name="confirmation" action="billPaid.do">
                         <p>
                             <label for="first">Bill ID: &nbsp;</label>
-                            <span><c:out value="${paymentBill.billID}"/></span>
+                            <span><c:out value="${paymentBill.bilID}"/></span>
                         </p>
                         <p>
                             <label for="first">Bill Amount: &nbsp;</label>

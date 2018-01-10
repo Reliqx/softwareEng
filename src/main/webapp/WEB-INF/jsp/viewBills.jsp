@@ -40,12 +40,12 @@
                             <c:forEach items="${billList}" var="v" varStatus="s">
                                 <tr>
                                     <td>${s.count}</td>
-                                    <td>${v.billID}</td>
+                                    <td>${v.bilID}</td>
                                     <td>${v.amount}</td>
                                     <td>${v.paid}</td>
                                     <c:if test = "${v.paid == 'NO'}">
                                         <c:url value="payBill.do" var="ref_pay">
-                                            <c:param name="bill_id" value="${v.billID}"/>
+                                            <c:param name="bill_id" value="${v.bilID}"/>
                                         </c:url>
                                         <td><a href="${ref_pay}">Pay</a></td>
                                     </c:if>
